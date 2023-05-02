@@ -36,20 +36,15 @@ public class TownCouncil {
     private Double calculateCharge(Vehicle vehicle){
         double charge;
         charge = switch (vehicle.getType()) {
-            case PRIVATE -> calculatePrivateCharge();
+            case PRIVATE -> vehicle.getBaseCharge();
             case TRACK -> calculateTrackCharge((SiteVehicle) vehicle);
             case MOTOR -> calculateMotorCharge((MotorBike) vehicle);
         };
         return charge;
     }
 
-
-    private Double calculatePrivateCharge(){
-        return 20.0;
-    }
-
     private Double calculateTrackCharge(SiteVehicle siteVehicle) {
-        double totalCharge = 30.0;
+        double totalCharge = siteVehicle.getBaseCharge();
         if(siteVehicle.getCapacity() <= 150){
             return totalCharge;
         }
@@ -62,7 +57,7 @@ public class TownCouncil {
 
     private Double calculateMotorCharge(MotorBike motorBike) {
         if(motorBike.getEngineCapacity() <= 850) {
-            return 7.0;
+            return motorBike.getBaseCharge();
         }
         return 10.0;
     }

@@ -91,6 +91,17 @@ Owner owner2;
     }
 
     @Test
+    void testPrivateVehicleReturnsDefaultCharge() throws OwnerNotRegisteredException {
+        // given
+        PrivateVehicle pv1 = new PrivateVehicle("GH-481-2",owner1, VehicleType.PRIVATE);
+
+        // when
+        var permit = underTest.issuePermit(pv1,owner1);
+        // then
+        assertEquals(20.0,permit.getCharge());
+    }
+
+    @Test
     void testMotorBikeReturnsDefaultCharge() throws OwnerNotRegisteredException {
         // given
         MotorBike mv1 = new MotorBike("GH-8080-3",owner2,VehicleType.MOTOR,350);

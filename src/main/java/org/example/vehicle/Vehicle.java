@@ -14,6 +14,8 @@ public abstract class Vehicle {
 
     private final VehicleType type;
 
+    protected double baseCharge;
+
     // single owner
     Vehicle(String numberPlate,Owner owner,VehicleType type) {
         this.numberPlate = numberPlate;
@@ -37,5 +39,9 @@ public abstract class Vehicle {
 
     public VehicleType getType() {
         return type;
+    }
+
+    public double getBaseCharge() {
+        return baseCharge;
     }
 }

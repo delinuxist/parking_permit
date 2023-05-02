@@ -10,12 +10,18 @@ public class MotorBike extends Vehicle{
     public MotorBike(String numberPlate, Owner owner, VehicleType type, Integer engineCapacity) {
         super(numberPlate, owner, type);
         this.engineCapacity = engineCapacity;
+        this.baseCharge = 7.0;
     }
 
     public MotorBike(String numberPlate, Map<String,Owner> owners, VehicleType type, Integer engineCapacity) {
         super(numberPlate, owners, type);
         this.engineCapacity = engineCapacity;
+        this.baseCharge = 7.0;
     }
+
+
+
+
 
     public Integer getEngineCapacity() {
         return engineCapacity;
