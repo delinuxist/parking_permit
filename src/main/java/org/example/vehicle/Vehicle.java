@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Vehicle {
+public abstract class Vehicle {
     private final String numberPlate;
 
     private Map<String,Owner> owners = new HashMap<>();
@@ -19,6 +19,12 @@ public class Vehicle {
         this.numberPlate = numberPlate;
         this.type = type;
         owners.put(owner.getDriversLicense(),owner);
+    }
+
+    Vehicle(String numberPlate,Map<String,Owner> owners,VehicleType type) {
+        this.numberPlate = numberPlate;
+        this.type = type;
+        owners.putAll(owners);
     }
 
     public String getNumberPlate() {

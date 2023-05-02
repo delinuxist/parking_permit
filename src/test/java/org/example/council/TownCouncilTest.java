@@ -7,7 +7,6 @@ import org.example.vehicle.PrivateVehicle;
 import org.example.vehicle.SiteVehicle;
 import org.example.vehicle.VehicleType;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,11 +29,11 @@ Owner owner2;
         PrivateVehicle pv1 = new PrivateVehicle("GH-481-2",owner1, VehicleType.PRIVATE);
 
         // then
-        assertThrows(OwnerNotRegisteredException.class,()->{underTest.issuePermit(pv1,owner2);});
+        assertThrows(OwnerNotRegisteredException.class,()-> underTest.issuePermit(pv1,owner2));
     }
 
     @Test
-    void testDoesNotThrowException() throws OwnerNotRegisteredException {
+    void testDoesNotThrowException() {
         // given
         PrivateVehicle pv1 = new PrivateVehicle("GH-481-2",owner1, VehicleType.PRIVATE);
 
@@ -133,6 +132,21 @@ Owner owner2;
         var permit = underTest.issuePermit(sv1,owner2);
         // then
         assertEquals(45.0,permit.getCharge());
+    }
+
+    @Test
+    void testShouldReturnListOfVehiclesOfSameType() throws OwnerNotRegisteredException {
+        // given
+        PrivateVehicle pv1 = new PrivateVehicle("GH-481-2",owner1, VehicleType.PRIVATE);
+        PrivateVehicle pv2 = new PrivateVehicle("GH-2281-2",owner2, VehicleType.PRIVATE);
+
+        // when
+        underTest.issuePermit(pv1,owner1);
+        underTest.issuePermit(pv2,owner2);
+
+        var vehicleList = underTest.getVehiclesByType(VehicleType.PRIVATE);
+        // then
+        assertEquals(2,vehicleList.size());
     }
 
 }

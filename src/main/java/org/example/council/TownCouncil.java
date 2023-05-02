@@ -85,4 +85,12 @@ public class TownCouncil {
     public Map<VehicleType, List<Vehicle>> getVehicles() {
         return vehicles;
     }
+
+    public List<Vehicle> getVehiclesByType(VehicleType type) {
+        return this.vehicles.get(type);
+    }
+
+    public Permit getPermit(Integer permitNumber) {
+        return permitsIssued.get(permitNumber);
+    }
 }
