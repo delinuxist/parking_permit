@@ -1,23 +1,36 @@
 package org.example.council;
 
+import org.example.authService.PermitIssuerService;
+import org.example.authService.VerificationService;
 import org.example.exception.OwnerNotRegisteredException;
+import org.example.exception.PermitIssueFailedException;
 import org.example.owner.Owner;
 import org.example.vehicle.MotorBike;
 import org.example.vehicle.PrivateVehicle;
 import org.example.vehicle.SiteVehicle;
 import org.example.vehicle.VehicleType;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class TownCouncilTest {
 TownCouncil underTest;
 Owner owner1;
 Owner owner2;
 
+@Mock
+VerificationService verificationService;
+
+@Mock
+PermitIssuerService permitIssuerService;
+
 @BeforeEach
     void setup() {
-    underTest = new TownCouncil();
+    underTest = new TownCouncil(verificationService,permitIssuerService);
     owner1 = new Owner("Jake","234sdfasdfss");
     owner2 = new Owner("Mike","sdfd8777989");
 
@@ -42,7 +55,7 @@ Owner owner2;
     }
 
     @Test
-    void testPermitsIssuedIncreases() throws OwnerNotRegisteredException {
+    void testPermitsIssuedIncreases() throws OwnerNotRegisteredException, PermitIssueFailedException {
         // given
         PrivateVehicle pv1 = new PrivateVehicle("GH-481-2",owner1, VehicleType.PRIVATE);
 
@@ -53,7 +66,7 @@ Owner owner2;
     }
 
     @Test
-    void testVehicleListUpdated() throws OwnerNotRegisteredException {
+    void testVehicleListUpdated() throws OwnerNotRegisteredException, PermitIssueFailedException {
         // given
         PrivateVehicle pv1 = new PrivateVehicle("GH-481-2",owner1, VehicleType.PRIVATE);
 
@@ -64,7 +77,7 @@ Owner owner2;
     }
 
     @Test
-    void testVehicleTypeListIncreaseToTwo() throws OwnerNotRegisteredException {
+    void testVehicleTypeListIncreaseToTwo() throws OwnerNotRegisteredException, PermitIssueFailedException {
         // given
         PrivateVehicle pv1 = new PrivateVehicle("GH-481-2",owner1, VehicleType.PRIVATE);
         PrivateVehicle pv2 = new PrivateVehicle("GH-2281-2",owner2, VehicleType.PRIVATE);
@@ -78,7 +91,7 @@ Owner owner2;
     }
 
     @Test
-    void testIfVehicleListContainsTwoTypesOfVehicle() throws OwnerNotRegisteredException {
+    void testIfVehicleListContainsTwoTypesOfVehicle() throws OwnerNotRegisteredException, PermitIssueFailedException {
         // given
         PrivateVehicle pv1 = new PrivateVehicle("GH-481-2",owner1, VehicleType.PRIVATE);
         MotorBike mv1 = new MotorBike("GH-8080-3",owner2,VehicleType.MOTOR,850);
@@ -91,7 +104,7 @@ Owner owner2;
     }
 
     @Test
-    void testPrivateVehicleReturnsDefaultCharge() throws OwnerNotRegisteredException {
+    void testPrivateVehicleReturnsDefaultCharge() throws OwnerNotRegisteredException, PermitIssueFailedException {
         // given
         PrivateVehicle pv1 = new PrivateVehicle("GH-481-2",owner1, VehicleType.PRIVATE);
 
@@ -102,7 +115,7 @@ Owner owner2;
     }
 
     @Test
-    void testMotorBikeReturnsDefaultCharge() throws OwnerNotRegisteredException {
+    void testMotorBikeReturnsDefaultCharge() throws OwnerNotRegisteredException, PermitIssueFailedException {
         // given
         MotorBike mv1 = new MotorBike("GH-8080-3",owner2,VehicleType.MOTOR,350);
 
@@ -113,7 +126,7 @@ Owner owner2;
     }
 
     @Test
-    void testMotorBikeReturnsExtraCharge() throws OwnerNotRegisteredException {
+    void testMotorBikeReturnsExtraCharge() throws OwnerNotRegisteredException, PermitIssueFailedException {
         // given
         MotorBike mv1 = new MotorBike("GH-8080-3",owner2,VehicleType.MOTOR,900);
 
@@ -124,7 +137,7 @@ Owner owner2;
     }
 
     @Test
-    void testSiteVehicleReturnsDefaultCharge() throws OwnerNotRegisteredException {
+    void testSiteVehicleReturnsDefaultCharge() throws OwnerNotRegisteredException, PermitIssueFailedException {
         // given
         SiteVehicle sv1 = new SiteVehicle("GH-8080-3",owner2,VehicleType.TRACK,150);
 
@@ -135,7 +148,7 @@ Owner owner2;
     }
 
     @Test
-    void testSiteVehicleReturnsChargePlusExtraCharge() throws OwnerNotRegisteredException {
+    void testSiteVehicleReturnsChargePlusExtraCharge() throws OwnerNotRegisteredException, PermitIssueFailedException {
         // given
         SiteVehicle sv1 = new SiteVehicle("GH-8080-3",owner2,VehicleType.TRACK,200);
 
@@ -146,7 +159,7 @@ Owner owner2;
     }
 
     @Test
-    void testShouldReturnListOfVehiclesOfSameType() throws OwnerNotRegisteredException {
+    void testShouldReturnListOfVehiclesOfSameType() throws OwnerNotRegisteredException, PermitIssueFailedException {
         // given
         PrivateVehicle pv1 = new PrivateVehicle("GH-481-2",owner1, VehicleType.PRIVATE);
         PrivateVehicle pv2 = new PrivateVehicle("GH-2281-2",owner2, VehicleType.PRIVATE);

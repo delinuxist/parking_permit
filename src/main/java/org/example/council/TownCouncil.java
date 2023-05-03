@@ -1,6 +1,9 @@
 package org.example.council;
 
+import org.example.authService.PermitIssuerService;
+import org.example.authService.VerificationService;
 import org.example.exception.OwnerNotRegisteredException;
+import org.example.exception.PermitIssueFailedException;
 import org.example.owner.Owner;
 import org.example.permit.Permit;
 import org.example.vehicle.*;
@@ -14,14 +17,29 @@ public class TownCouncil {
     private final Map<Integer, Permit> permitsIssued = new HashMap<>();
     private final Map<VehicleType, List<Vehicle>> vehicles = new HashMap<>();
 
+    private final VerificationService verificationService;
 
-    public Permit issuePermit(Vehicle vehicle,Owner requester) throws OwnerNotRegisteredException {
-        if(!isOwnerRegistered(vehicle.getOwners(),requester)){
+    private final PermitIssuerService permitIssuerService;
+
+    public TownCouncil(VerificationService verificationService,PermitIssuerService permitIssuerService){
+        this.verificationService = verificationService;
+        this.permitIssuerService = permitIssuerService;
+    }
+
+
+    public Permit issuePermit(Vehicle vehicle,Owner requester) throws OwnerNotRegisteredException, PermitIssueFailedException {
+        if(!isOwnerRegistered(vehicle.getOwners(),requester,vehicle)){
             throw new OwnerNotRegisteredException();
         }
         // create permit
-        Permit newPermit = new Permit(vehicle,calculateCharge(vehicle));
+        Permit newPermit;
+        if(vehicle.getType() == VehicleType.PRIVATE || vehicle.getType() == VehicleType.MOTOR){
+            if(permitIssuerService.issuePermit(vehicle).equals("")){
+                throw new PermitIssueFailedException();
+            }
+        }
 
+        newPermit = new Permit(vehicle,calculateCharge(vehicle));
         permitsIssued.put(newPermit.getPermitNumber(),newPermit);
 
         updateVehiclesList(vehicle);
@@ -29,8 +47,8 @@ public class TownCouncil {
         return newPermit;
     }
 
-    private boolean isOwnerRegistered(Map<String,Owner> owners,Owner requester){
-        return owners.containsKey(requester.getDriversLicense());
+    private boolean isOwnerRegistered(Map<String,Owner> owners,Owner requester,Vehicle vehicle){
+        return owners.containsKey(requester.getDriversLicense()) && verificationService.verifyPerson(requester,vehicle);
     }
 
     private Double calculateCharge(Vehicle vehicle){
