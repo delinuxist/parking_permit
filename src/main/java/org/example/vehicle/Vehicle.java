@@ -26,7 +26,7 @@ public abstract class Vehicle {
     Vehicle(String numberPlate,Map<String,Owner> owners,VehicleType type) {
         this.numberPlate = numberPlate;
         this.type = type;
-        owners.putAll(owners);
+        this.owners.putAll(owners);
     }
 
     public String getNumberPlate() {
